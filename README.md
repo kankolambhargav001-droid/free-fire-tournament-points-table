@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 🎮 Free Fire Tournament Points Table
 
-# Run and deploy your AI Studio app
+> AI-powered tournament management and points-table application for Free Fire esports tournaments.
 
-This contains everything you need to run your app locally.
+A full-stack web application designed to help tournament organizers manage teams, process match results, calculate standings, and publish tournament results.
 
-View your app in AI Studio: https://ai.studio/apps/71cdb85e-96d6-41a8-a830-1396c1324125
+The application uses **Google Gemini AI** to extract tournament information from screenshots and **Firebase** for authentication, database management, and access control.
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## 🚀 Project Overview
 
+Managing Free Fire esports tournaments manually can be time-consuming.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Organizers often need to:
+
+- Read team and player names from screenshots
+- Process multiple match results
+- Record player kills
+- Track team placements
+- Calculate tournament points
+- Maintain leaderboards
+- Generate final points tables
+- Share results with players
+
+This project aims to simplify that workflow.
+
+### Basic workflow
+
+```text
+📸 Upload Screenshot
+        ↓
+🤖 Gemini AI Extraction
+        ↓
+📋 Structured Match Data
+        ↓
+🧮 Process Results
+        ↓
+📊 Calculate Standings
+        ↓
+🏆 Generate Points Table
+        ↓
+🌐 Publish Results
