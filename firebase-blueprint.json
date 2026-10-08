@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "Tournament": {
+      "title": "Tournament",
+      "description": "Published tournament standings snapshot",
+      "type": "object",
+      "properties": {
+        "publicId": {
+          "type": "string",
+          "description": "Unique alphanumeric public identifier for public URL",
+          "maxLength": 64
+        },
+        "tournamentId": {
+          "type": "string",
+          "description": "Local ID of the tournament",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Tournament name",
+          "maxLength": 128
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Subtitle or stage",
+          "maxLength": 128
+        },
+        "organizer": {
+          "type": "string",
+          "description": "Organizer name",
+          "maxLength": 128
+        },
+        "date": {
+          "type": "string",
+          "description": "Date string",
+          "maxLength": 64
+        },
+        "teamCount": {
+          "type": "number",
+          "description": "Number of teams"
+        },
+        "playersPerTeam": {
+          "type": "number",
+          "description": "Players per team"
+        },
+        "matchCount": {
+          "type": "number",
+          "description": "Total scheduled matches"
+        },
+        "completedMatches": {
+          "type": "number",
+          "description": "Completed matches count"
+        },
+        "published": {
+          "type": "boolean",
+          "description": "Whether the tournament is published for public viewing"
+        },
+        "publisherUid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the publishing organizer",
+          "maxLength": 128
+        },
+        "publisherEmail": {
+          "type": "string",
+          "description": "Email of the publishing organizer",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when published"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when last updated"
+        }
+      },
+      "required": ["publicId", "tournamentId", "name", "published", "publisherUid"]
+    }
+  },
+  "firestore": {
+    "/tournaments/{publicId}": {
+      "schema": "Tournament",
+      "description": "Collection of published tournament snapshots accessible via /results/:publicId"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Tournament Points",
+  "description": "Premium esports tournament points-table management platform for creating, calculating, and exporting tournament standings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

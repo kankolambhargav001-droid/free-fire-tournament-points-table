@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isApprovedOrganizer(uid) {
+      return isSignedIn() &&
+        request.auth.uid == uid &&
+        exists(/databases/$(database)/documents/organizerAccess/$(uid)) &&
+        get(/databases/$(database)/documents/organizerAccess/$(uid)).data.enabled == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\-]+$');
+    }
+
+    function validPrivateTournament(data) {
+      return data.keys().hasAll(['tournament', 'ownerUid']) &&
+        data.ownerUid is string &&
+        data.ownerUid == request.auth.uid &&
+        data.tournament.id is string &&
+        data.tournament.id.size() > 0;
+    }
+
+    // Organizer allowlist. These documents are created manually by the app owner
+    // after creating the corresponding Firebase Authentication user.
+    match /organizerAccess/{uid} {
+      allow get: if isSignedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+
+    // Private tournament data: every organizer has a completely isolated namespace.
+    match /organizers/{uid}/tournaments/{tournamentId} {
+      allow get, list: if isApprovedOrganizer(uid) && isValidId(tournamentId);
+      allow create: if isApprovedOrganizer(uid) &&
+        isValidId(tournamentId) &&
+        validPrivateTournament(request.resource.data);
+      allow update: if isApprovedOrganizer(uid) &&
+        isValidId(tournamentId) &&
+        resource.data.ownerUid == request.auth.uid &&
+        validPrivateTournament(request.resource.data);
+      allow delete: if isApprovedOrganizer(uid) &&
+        isValidId(tournamentId) &&
+        resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Public read-only tournament results.
+    match /tournaments/{publicId} {
+      allow get: if isValidId(publicId) && resource.data.published == true;
+      allow list: if false;
+
+      allow create: if isSignedIn() &&
+        isValidId(publicId) &&
+        request.resource.data.publicId == publicId &&
+        request.resource.data.publisherUid == request.auth.uid &&
+        request.resource.data.published == true;
+
+      allow update: if isSignedIn() &&
+        isValidId(publicId) &&
+        resource.data.publisherUid == request.auth.uid &&
+        request.resource.data.publisherUid == resource.data.publisherUid &&
+        request.resource.data.publicId == resource.data.publicId;
+
+      allow delete: if isSignedIn() && resource.data.publisherUid == request.auth.uid;
+    }
+  }
+}
